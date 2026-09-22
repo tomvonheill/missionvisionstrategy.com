@@ -1,0 +1,545 @@
+/* Mission Vision Strategy — one stylesheet for every page.
+   Palette comes from the Chicago flag: light-blue stripes, red six-pointed
+   stars, on a deep lakefront navy. */
+
+:root {
+  --navy: #0b2433;
+  --navy-deep: #07192a;
+  --flag-blue: #41b6e6;
+  --flag-blue-soft: #e3f4fb;
+  --star-red: #e4002b;
+  --ink: #14222b;
+  --muted: #56666f;
+  --paper: #ffffff;
+  --paper-warm: #f6f5f1;
+  --line: #dfe3e6;
+
+  --font-head: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --wrap: 72rem;
+  --radius: 6px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.75rem;
+}
+
+h1 {
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--star-red);
+  margin-bottom: 0.75rem;
+}
+
+.star {
+  width: 0.9em;
+  height: 0.9em;
+  flex: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--star-red);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.button:hover {
+  background: #b80023;
+}
+
+.button-ghost {
+  background: transparent;
+  border: 2px solid currentColor;
+}
+
+.button-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  color: var(--navy);
+}
+
+.brand .star {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav a {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--star-red);
+}
+
+.site-nav .button {
+  color: #fff;
+  padding: 0.55rem 1.1rem;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  background: var(--navy);
+  color: #fff;
+  padding: 5.5rem 0 11rem;
+  overflow: hidden;
+}
+
+/* The flag's two light-blue stripes. */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: var(--flag-blue);
+}
+
+.hero::before {
+  top: 0;
+}
+
+.hero::after {
+  top: 22px;
+}
+
+/* Skyline silhouette, repeated along the bottom edge so it's never cropped. */
+.hero .skyline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 9rem;
+  background: url("images/skyline.svg") repeat-x left bottom / auto 100%;
+}
+
+.hero .wrap {
+  position: relative;
+}
+
+.hero h1 {
+  max-width: 16ch;
+}
+
+.hero .lede {
+  max-width: 38rem;
+  font-size: 1.2rem;
+  color: #d3e3ec;
+  margin-bottom: 2rem;
+}
+
+.hero .eyebrow {
+  color: var(--flag-blue);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-hero {
+  padding: 4.5rem 0 8rem;
+}
+
+.page-hero .skyline {
+  height: 6rem;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  padding: 5rem 0;
+}
+
+.section-warm {
+  background: var(--paper-warm);
+}
+
+.section-head {
+  max-width: 42rem;
+  margin-bottom: 2.5rem;
+}
+
+.section-head p {
+  color: var(--muted);
+  font-size: 1.125rem;
+}
+
+/* Audience chips */
+
+.audiences {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.audiences li {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-weight: 500;
+}
+
+/* Cards */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.75rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--flag-blue);
+  border-radius: var(--radius);
+}
+
+.card p {
+  color: var(--muted);
+  flex: 1;
+}
+
+.card a {
+  font-weight: 600;
+  color: var(--star-red);
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
+
+/* Stats band */
+
+.stats {
+  background: var(--flag-blue-soft);
+  padding: 3.5rem 0;
+}
+
+.stats ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.stats strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--navy);
+}
+
+.stats span {
+  color: var(--muted);
+}
+
+/* Two-column about / feature */
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 3rem;
+  align-items: start;
+}
+
+.work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.work-list li {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.work-list li:first-child {
+  padding-top: 0;
+}
+
+.work-list .star {
+  margin-top: 0.35rem;
+}
+
+.quote {
+  margin: 0;
+  padding: 2rem;
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius);
+  border-left: 6px solid var(--star-red);
+}
+
+.quote p {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+.quote cite {
+  color: #b9cfdc;
+  font-style: normal;
+}
+
+/* Services detail page */
+
+.service {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 2rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.service:last-child {
+  border-bottom: 0;
+}
+
+.service ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.service li {
+  margin-bottom: 0.4rem;
+}
+
+/* Approach page steps */
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.steps > li {
+  position: relative;
+  padding: 2.5rem 0 2.5rem 5.5rem;
+  border-bottom: 1px solid var(--line);
+  counter-increment: step;
+}
+
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 2.3rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.steps p {
+  color: var(--muted);
+  max-width: 44rem;
+}
+
+/* Contact band */
+
+.contact {
+  background: var(--navy);
+  color: #fff;
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.contact p {
+  color: #d3e3ec;
+  max-width: 36rem;
+  margin: 0 auto 2rem;
+  font-size: 1.15rem;
+}
+
+.contact .email {
+  display: block;
+  margin-top: 1.25rem;
+  color: #d3e3ec;
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  background: var(--navy-deep);
+  color: #b9cfdc;
+  padding: 2.5rem 0;
+  font-size: 0.95rem;
+}
+
+.site-footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-stars {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-stars .star {
+  width: 1rem;
+  height: 1rem;
+}
+
+.site-footer a {
+  color: #fff;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 40rem) {
+  .hero {
+    padding: 4rem 0 8rem;
+  }
+
+  .hero .skyline {
+    height: 6rem;
+  }
+
+  .service {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .steps > li {
+    padding-left: 0;
+    padding-top: 5rem;
+  }
+
+  .steps > li::before {
+    top: 1.25rem;
+  }
+}
