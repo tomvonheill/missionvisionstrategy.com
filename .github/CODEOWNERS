@@ -1,0 +1,6 @@
+# Everything outside site/ is infrastructure and needs Tom's review.
+*        @tomvonheill
+
+# site/ has no code owner on purpose: content PRs can be merged by their
+# author once the `check` workflow passes.
+/site/
