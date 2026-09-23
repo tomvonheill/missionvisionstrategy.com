@@ -35,7 +35,7 @@ and merging it, so the dev site doesn't fall behind.
 
 ```
 site/
-  index.html      home page: hero, who we work with, services overview, numbers, about, contact
+  index.html      home page: hero, who we work with, services overview, about, contact
   services.html   the four services in detail (anchors: #assessment #planning #operations #research)
   approach.html   Mission / Vision / Strategy / Follow-through
   styles.css      all styling, one file
