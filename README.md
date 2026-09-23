@@ -24,12 +24,13 @@ site-verification TXT, DMARC) are deliberately left alone.
 
 ## Guardrails
 
-- `main` is protected: changes land through PRs, the `check` workflow must pass, and code-owner
-  review applies. Admins can bypass.
-- `dev` accepts direct pushes but can't be deleted or force-pushed. The repo allows merge commits
-  only, so `dev` and `main` don't drift apart after a `dev` → `main` merge.
-- `.github/CODEOWNERS` gives Tom everything **except** `site/`, which has no owner. So Kennen can
-  merge site-only PRs himself, and anything else needs Tom's review.
-- The `check` workflow (`.github/workflows/check.yml`) fails any PR by someone other than
-  `tomvonheill` that touches files outside `site/`, validates HTML with `html-validate`, and checks
-  internal links with `.github/scripts/check_links.py`.
+- `main` and `dev` both accept direct pushes from collaborators, but neither can be force-pushed or
+  deleted. The repo allows merge commits only, so `dev` and `main` don't drift apart.
+- The `check` workflow (`.github/workflows/check.yml`) runs on every push to `main` and on every PR.
+  On PRs it fails any change by someone other than `tomvonheill` that touches files outside
+  `site/`. It validates HTML with `html-validate` and checks internal links with
+  `.github/scripts/check_links.py`. On direct pushes it reports but can't block; a required check
+  would block direct pushes entirely.
+- `.github/CODEOWNERS` gives Tom everything except `site/`. It only takes effect on PRs, since direct
+  pushes skip review.
+- Cloudflare Pages only publishes `site/`, and the repo holds no secrets.

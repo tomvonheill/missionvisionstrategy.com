@@ -7,8 +7,8 @@ no JavaScript. What's in `site/` is exactly what gets published.
 ## The one rule
 
 **Only edit files inside `site/`.** Everything else (`.github/`, this file, the README) is
-infrastructure. A pull request that changes anything outside `site/` fails its checks and needs
-Tom to review it.
+infrastructure that Tom maintains. A pull request that changes anything outside `site/` fails its
+checks.
 
 ## How changes go live
 
@@ -23,11 +23,13 @@ There are two sites and two branches:
    needed. About a minute later, https://dev.missionvisionstrategy.com shows them.
 2. **Keep going until it looks right.** Every commit to `dev` updates the dev site.
 3. **Publish:** open a pull request from `dev` into `main`. The **`check`** job validates the HTML
-   and makes sure every internal link and image exists; it must be green before you can merge.
+   and makes sure every internal link and image exists. Wait for it to turn green before merging.
 4. **Merge the pull request** (use "Create a merge commit", the only option). The real site updates
    within about a minute. Leave the `dev` branch in place; it's reused for the next round.
 
-`main` can't be committed to directly; changes reach it only through a pull request.
+**Small, urgent fix?** You can also commit straight to `main`; it goes live in about a minute with
+no dev preview. Afterwards, bring `dev` up to date by opening a pull request from `main` into `dev`
+and merging it, so the dev site doesn't fall behind.
 
 ## What's where
 
