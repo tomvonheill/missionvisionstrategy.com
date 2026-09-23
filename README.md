@@ -5,11 +5,11 @@ in `site/`, published by Cloudflare Pages. Content editing guide: [CLAUDE.md](CL
 
 ## How it's hosted
 
-- **Cloudflare Pages** project `missionvisionstrategy`, connected to this repo. Production branch
+- **Cloudflare Pages** project `missionvisionstrategy-com`, connected to this repo. Production branch
   `main`, no build command, output directory `site`. Every PR gets a preview deployment. Build
   settings live in the Cloudflare dashboard, not in this repo.
 - **DNS stays at GoDaddy** (Kennen's account). `www` is a CNAME to
-  `missionvisionstrategy.pages.dev`; the bare domain uses GoDaddy domain forwarding (301) to
+  `missionvisionstrategy-com.pages.dev`; the bare domain uses GoDaddy domain forwarding (301) to
   `https://www.missionvisionstrategy.com`. The email records (Google Workspace MX,
   site-verification TXT, DMARC) are GoDaddy's and are deliberately left alone.
 
