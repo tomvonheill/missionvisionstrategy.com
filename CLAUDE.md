@@ -4,15 +4,25 @@ The website for **Mission Vision Strategy** (www.missionvisionstrategy.com), Ken
 Chicago-based organizational strategy practice. Built with [Astro](https://astro.build): pages
 are `.astro` files, posts are Markdown, and Cloudflare Pages builds and publishes the site.
 
-## The rules
+## How we work
 
-1. **Always work on the `dev` branch. Never commit to `main`** (it only accepts pull requests).
+1. **Recommended flow: work on the `dev` branch**, preview it on
+   https://dev.missionvisionstrategy.com, then publish.
 2. **Publishing = merging the "Publish to the live site" pull request** (`dev` → `main`). It is
    opened automatically after every push to `dev`. Wait for **check** to be green, then merge
    with "Create a merge commit" (not squash, not rebase).
-3. **Don't change infrastructure:** `.github/`, `package.json`, `package-lock.json`,
-   `astro.config.mjs`, `tsconfig.json`, `.nvmrc`, `public/admin/`, `scripts/`. The **check** fails if you do.
-   Ask Tom instead.
+3. **Small urgent fix?** You can commit straight to `main`; it goes live in about a minute with
+   no preview. Afterwards merge `main` into `dev` (PR `main` → `dev`) so `dev` doesn't fall behind.
+
+Everything in this repo is Kennen's to change: pages, styles, posts, the CMS config in
+`public/admin/`, dependencies, and workflows. A failed Cloudflare build leaves the previous live
+version up, so a broken change doesn't take the site down. Check the dev site and the **check**
+run on GitHub to catch problems. Only force-push and deleting `main` or `dev` are blocked, to
+protect history.
+
+Tom manages the hosting outside the repo: the two Cloudflare Pages projects (build settings and
+the `PUBLIC_SITE_ENV` variable), the `mvs-cms-auth` Worker and its GitHub OAuth App, and DNS.
+Ask him if one of those needs to change.
 
 | Branch | Site | Who sees it |
 |---|---|---|

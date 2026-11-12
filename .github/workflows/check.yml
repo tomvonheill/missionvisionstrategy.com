@@ -13,28 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Infrastructure files are Tom's
-        env:
-          EVENT: ${{ github.event_name }}
-          BEFORE: ${{ github.event.before }}
-          REF: ${{ github.ref }}
-          SHA: ${{ github.sha }}
-          PR_BASE: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          if [ "$EVENT" = "pull_request" ]; then
-            RANGE="$PR_BASE..$PR_HEAD"
-          elif [ "$REF" = "refs/heads/dev" ]; then
-            # everything on dev that is not yet on main (fetch-depth 0 fetched origin/main)
-            RANGE="origin/main..$SHA"
-          else
-            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then exit 0; fi
-            RANGE="$BEFORE..$SHA"
-          fi
-          python3 .github/scripts/guard_paths.py "$RANGE"
 
       - uses: actions/setup-node@v4
         with:
@@ -48,7 +26,6 @@ jobs:
       - name: Test the CI scripts
         run: |
           python3 .github/scripts/test_check_links.py
-          python3 .github/scripts/test_guard_paths.py
 
       - name: Build as the dev site (drafts included)
         run: PUBLIC_SITE_ENV=dev npm run build

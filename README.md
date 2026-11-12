@@ -5,7 +5,9 @@ Cloudflare Pages. Detailed editing guide (also read by Claude): [CLAUDE.md](CLAU
 
 ## Making edits
 
-Every change goes to the **dev** site first, then you publish it.
+The recommended flow: changes go to the **dev** site first, then you publish them. Everything in
+this repo is yours to change: pages, styles, posts, the CMS config in `public/admin/`,
+dependencies, and workflows.
 
 ### Write or edit an Insights post (no code)
 1. Go to https://www.missionvisionstrategy.com/admin/ and **Sign in with GitHub**.
@@ -37,7 +39,14 @@ Every change goes to the **dev** site first, then you publish it.
 3. Click **Merge pull request** → **Create a merge commit** (not squash or rebase) → confirm.
    The live site updates in about a minute. Leave the `dev` branch in place.
 
+### Small urgent fix
+You can commit straight to `main`; it goes live in about a minute with no preview. Afterwards
+merge `main` into `dev` (PR `main` → `dev`) so `dev` doesn't fall behind.
+
 ## How it's hosted
+
+Tom manages the hosting outside the repo: the two Cloudflare Pages projects and their build
+settings, the `mvs-cms-auth` Worker and GitHub OAuth App, and DNS.
 
 | Pages project | Branch | Domain | Build | Env |
 |---|---|---|---|---|
@@ -58,18 +67,15 @@ Every change goes to the **dev** site first, then you publish it.
   `GITHUB_CLIENT_SECRET`; `ALLOWED_DOMAINS=www.missionvisionstrategy.com, dev.missionvisionstrategy.com`.
   Only GitHub users with write access to this repo can save.
 
-## Guardrails
+## Checks and safety net
 
-- `main` accepts pull requests only (ruleset; Tom can bypass); `check` must pass. No force-push
-  or delete on `main` or `dev`. Publish with merge commits only.
-- `check` (`.github/workflows/check.yml`) runs on PRs and pushes to `main`/`dev`: an
-  infrastructure-path guard, `astro check`, unit tests, dev and live builds, HTML validation,
-  internal link check, and an Insights presence/absence check. The guard judges the net change
-  (everything on `dev` not yet on `main`, or the PR's changes): an infrastructure path in that diff
-  fails `check` unless the most recent commit touching it (including edits made inside merge
-  commits) is by Tom, using his GitHub noreply identity. Reverting a bad change clears the guard.
-  It is a guardrail (author identities are self-declared), not a security boundary: CODEOWNERS,
-  the ruleset and Tom's review are the backstop.
+- `check` (`.github/workflows/check.yml`) runs on PRs and pushes to `main`/`dev`: `astro check`,
+  unit tests, dev and live builds, HTML validation, internal link check, and an Insights
+  presence/absence check. It is a helpful build check, not a gate.
+- A failed Cloudflare build leaves the previous live version up, so a broken change doesn't take
+  the site down. Check the dev site and the `check` run.
+- `main` and `dev` can't be force-pushed or deleted (protects history). Direct pushes to `main`
+  are allowed. Publish with merge commits.
 - `publish-pr` (`.github/workflows/publish-pr.yml`) keeps the "Publish to the live site" PR open
   and its description current.
-- `.github/CODEOWNERS` gives Tom the infrastructure paths. The repo holds no secrets.
+- The repo holds no secrets.
