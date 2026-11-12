@@ -2,7 +2,7 @@
 import ContactBand from '../components/ContactBand.astro'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
-import { getVisiblePosts } from '../lib/insights'
+import { hasVisiblePosts } from '../lib/insights'
 import type { Current } from '../lib/nav.ts'
 import '../styles/global.css'
 
@@ -15,7 +15,7 @@ interface Props {
   ogType?: 'website' | 'article'
 }
 const { title, description, current, contactHeading, contactText, ogType = 'website' } = Astro.props
-const hasInsights = (await getVisiblePosts()).length > 0
+const hasInsights = await hasVisiblePosts()
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 <!DOCTYPE html>

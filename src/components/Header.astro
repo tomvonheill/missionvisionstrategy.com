@@ -1,9 +1,9 @@
 ---
-import { getVisiblePosts } from '../lib/insights'
+import { hasVisiblePosts } from '../lib/insights'
 import type { Current } from '../lib/nav.ts'
 interface Props { current?: Current }
 const { current } = Astro.props
-const hasInsights = (await getVisiblePosts()).length > 0
+const hasInsights = await hasVisiblePosts()
 const here = (page: Current) => (current === page ? 'page' : undefined)
 ---
 <header class="site-header">

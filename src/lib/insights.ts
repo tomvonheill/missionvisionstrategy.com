@@ -7,3 +7,7 @@ export const includeDrafts: boolean = import.meta.env.DEV || import.meta.env.PUB
 export async function getVisiblePosts(): Promise<CollectionEntry<'insights'>[]> {
   return newestFirst(await getCollection('insights', ({ data }) => isVisible(data, includeDrafts)))
 }
+
+export async function hasVisiblePosts(): Promise<boolean> {
+  return (await getVisiblePosts()).length > 0
+}

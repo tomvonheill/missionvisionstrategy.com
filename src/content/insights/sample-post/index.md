@@ -3,7 +3,7 @@ title: "Sample post: every element Insights can show"
 description: "A draft that only appears on the dev site. Use it to check how posts look; delete it any time."
 pubDate: 2026-11-12
 heroImage: ./hero.png
-heroAlt: "The Chicago skyline outline used across the site"
+heroAlt: "The Mission Vision Strategy home page"
 draft: true
 ---
 
@@ -25,7 +25,7 @@ Short paragraphs read best. Links look like [this one to our services](/services
 
 > "Make no little plans." A blockquote, for a quote worth pulling out.
 
-![The red six-pointed Chicago star](/images/star.svg "Images get a caption from their title")
+![The Mission Vision Strategy home page](./hero.png)
 
 | Phase | What happens |
 |---|---|
