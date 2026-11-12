@@ -39,6 +39,13 @@ class PerCommit(unittest.TestCase):
         self.assertEqual(offending(commits, OWNERS),
                          [("b2", KENNEN, ["public/admin/config.yml", ".github/x.yml"])])
 
+    def test_merge_by_nonowner_with_no_files_allowed(self):
+        self.assertEqual(offending([("m1", KENNEN, [])], OWNERS), [])
+
+    def test_merge_by_nonowner_editing_infra_flagged(self):
+        self.assertEqual(offending([("m2", KENNEN, ["package.json"])], OWNERS),
+                         [("m2", KENNEN, ["package.json"])])
+
     def test_empty(self):
         self.assertEqual(offending([], OWNERS), [])
 

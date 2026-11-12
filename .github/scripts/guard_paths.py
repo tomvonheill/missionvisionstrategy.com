@@ -1,7 +1,7 @@
 """Fail if a commit by someone other than Tom touches infrastructure paths.
 
 Usage: python3 .github/scripts/guard_paths.py <git-log-range>   (e.g. origin/main..origin/dev)
-Each non-merge commit is judged by its author email, so Tom's own infra commits
+Each commit is judged by its author email (merges list only files differing from every parent), so Tom's own infra commits
 pass even when they sit in a range that Kennen publishes.
 """
 import subprocess
@@ -44,7 +44,7 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("usage: guard_paths.py <git-log-range>")
     log = subprocess.run(
-        ["git", "log", "--no-merges", "--format=%x00%H%x09%ae", "--name-only", sys.argv[1]],
+        ["git", "log", "--cc", "--format=%x00%H%x09%ae", "--name-only", sys.argv[1]],
         check=True, capture_output=True, text=True).stdout
     bad = offending(parse_log(log), OWNERS)
     for sha, email, paths in bad:

@@ -59,7 +59,7 @@ jobs:
         run: |
           python3 .github/scripts/check_links.py dist
           npx --yes html-validate@9 "dist/**/*.html"
-          if find src/content/insights -name index.md -exec grep -L '^draft: true' {} + | grep -q .; then
+          if find src/content/insights -mindepth 2 -maxdepth 2 -name index.md -exec grep -L '^draft: true' {} + | grep -q .; then
             node scripts/check-dist.ts dist posts
           else
             node scripts/check-dist.ts dist none
