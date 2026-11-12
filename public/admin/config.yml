@@ -19,6 +19,11 @@ logo:
 media_folder: public/images/uploads
 public_folder: /images/uploads
 # Leave empty optional fields out of the front matter (Zod .optional() rejects "" / null).
+# ASCII-only, lowercase post folder names / URLs.
+slug:
+  encoding: ascii
+  clean_accents: true
+
 output:
   omit_empty_optional_fields: true
 
