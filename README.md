@@ -8,6 +8,10 @@ Cloudflare Pages. Detailed editing guide (also read by Claude): [CLAUDE.md](CLAU
 The recommended flow: changes go to the **dev** site first, then you publish them. Everything in
 this repo is yours to change: pages, styles, dependencies, and workflows.
 
+### One-time setup for Claude
+In Claude, connect GitHub and give it access to `tomvonheill/missionvisionstrategy.com`. Claude
+reads [CLAUDE.md](CLAUDE.md) for the house style and how this repo works.
+
 ### Change a page, the layout, or the design (with Claude)
 1. In Claude (with the GitHub connector on this repository), describe the change, e.g.
    "On the Services page, add a fifth service called …". Say **"work on the dev branch"**.
@@ -44,6 +48,9 @@ settings, and DNS.
 | `missionvisionstrategy-dev` | `dev` | dev.missionvisionstrategy.com | `npm run build` → `dist` |
 
 - Node version from `.nvmrc`. Build settings live in Cloudflare, not this repo.
+- **Before bumping Node in `.nvmrc`,** make sure Cloudflare's build image knows that version: it
+  lags new Node releases by days or weeks (22.23.5 failed with "definition not found", so we pin
+  22.23.4). An unknown version fails the build and the site stays on its last good version.
 - **DNS stays at GoDaddy** (Kennen's account): `www` → `missionvisionstrategy-com.pages.dev`,
   `dev` → `missionvisionstrategy-dev.pages.dev`, bare domain forwards (301) to www. Email records
   (Google Workspace MX, verification TXT, DMARC) are left alone.
