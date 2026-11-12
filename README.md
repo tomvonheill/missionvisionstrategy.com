@@ -6,17 +6,7 @@ Cloudflare Pages. Detailed editing guide (also read by Claude): [CLAUDE.md](CLAU
 ## Making edits
 
 The recommended flow: changes go to the **dev** site first, then you publish them. Everything in
-this repo is yours to change: pages, styles, posts, the CMS config in `public/admin/`,
-dependencies, and workflows.
-
-### Write or edit an Insights post (no code)
-1. Go to https://www.missionvisionstrategy.com/admin/ and **Sign in with GitHub**.
-2. **Insights → New Post.** Fill in title, summary, date, body (and a hero image + description
-   if you like). New posts start with **Draft** on; leave it on for now.
-3. **Save.** About a minute later it appears on https://dev.missionvisionstrategy.com/insights/
-   marked "Draft".
-4. When you're happy, open the post again, turn **Draft** off, and **Save**.
-5. Publish (below).
+this repo is yours to change: pages, styles, dependencies, and workflows.
 
 ### Change a page, the layout, or the design (with Claude)
 1. In Claude (with the GitHub connector on this repository), describe the change, e.g.
@@ -46,12 +36,12 @@ merge `main` into `dev` (PR `main` → `dev`) so `dev` doesn't fall behind.
 ## How it's hosted
 
 Tom manages the hosting outside the repo: the two Cloudflare Pages projects and their build
-settings, the `mvs-cms-auth` Worker and GitHub OAuth App, and DNS.
+settings, and DNS.
 
-| Pages project | Branch | Domain | Build | Env |
-|---|---|---|---|---|
-| `missionvisionstrategy-com` | `main` | www.missionvisionstrategy.com | `npm run build` → `dist` | — |
-| `missionvisionstrategy-dev` | `dev` | dev.missionvisionstrategy.com | `npm run build` → `dist` | `PUBLIC_SITE_ENV=dev` (shows drafts) |
+| Pages project | Branch | Domain | Build |
+|---|---|---|---|
+| `missionvisionstrategy-com` | `main` | www.missionvisionstrategy.com | `npm run build` → `dist` |
+| `missionvisionstrategy-dev` | `dev` | dev.missionvisionstrategy.com | `npm run build` → `dist` |
 
 - Node version from `.nvmrc`. Build settings live in Cloudflare, not this repo.
 - **DNS stays at GoDaddy** (Kennen's account): `www` → `missionvisionstrategy-com.pages.dev`,
@@ -61,17 +51,11 @@ settings, the `mvs-cms-auth` Worker and GitHub OAuth App, and DNS.
   the old `.html` URLs.
 - The repo setting **Settings → Actions → General → "Allow GitHub Actions to create and approve
   pull requests"** must be on, or the Publish PR workflow can't open the pull request.
-- **/admin sign-in:** Cloudflare Worker `mvs-cms-auth` (https://mvs-cms-auth.tvh92.workers.dev,
-  Tom's Cloudflare account; source: sveltia/sveltia-cms-auth) + GitHub OAuth App
-  "Mission Vision Strategy CMS" (Tom's GitHub). Worker secrets: `GITHUB_CLIENT_ID`,
-  `GITHUB_CLIENT_SECRET`; `ALLOWED_DOMAINS=www.missionvisionstrategy.com, dev.missionvisionstrategy.com`.
-  Only GitHub users with write access to this repo can save.
 
 ## Checks and safety net
 
 - `check` (`.github/workflows/check.yml`) runs on PRs and pushes to `main`/`dev`: `astro check`,
-  unit tests, dev and live builds, HTML validation, internal link check, and an Insights
-  presence/absence check. It is a helpful build check, not a gate.
+  the build, HTML validation, and the internal link check. It is a helpful build check, not a gate.
 - A failed Cloudflare build leaves the previous live version up, so a broken change doesn't take
   the site down. Check the dev site and the `check` run.
 - `main` and `dev` can't be force-pushed or deleted (protects history). Direct pushes to `main`

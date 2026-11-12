@@ -21,27 +21,13 @@ jobs:
 
       - run: npm ci
       - run: npx astro check
-      - name: Unit tests
-        run: npm test
       - name: Test the CI scripts
         run: |
           python3 .github/scripts/test_check_links.py
 
-      - name: Build as the dev site (drafts included)
-        run: PUBLIC_SITE_ENV=dev npm run build
-      - name: Check the dev build
-        run: |
-          python3 .github/scripts/check_links.py dist
-          npx html-validate "dist/**/*.html"
-
-      - name: Build as the live site
+      - name: Build
         run: npm run build
-      - name: Check the live build
+      - name: Check the build
         run: |
           python3 .github/scripts/check_links.py dist
           npx html-validate "dist/**/*.html"
-          if find src/content/insights -mindepth 2 -maxdepth 2 -name index.md -exec grep -L '^draft: true' {} + | grep -q .; then
-            node scripts/check-dist.ts dist posts
-          else
-            node scripts/check-dist.ts dist none
-          fi

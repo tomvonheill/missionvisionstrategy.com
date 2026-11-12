@@ -2,7 +2,7 @@
 
 The website for **Mission Vision Strategy** (www.missionvisionstrategy.com), Kennen Hutchison's
 Chicago-based organizational strategy practice. Built with [Astro](https://astro.build): pages
-are `.astro` files, posts are Markdown, and Cloudflare Pages builds and publishes the site.
+are `.astro` files, and Cloudflare Pages builds and publishes the site.
 
 ## How we work
 
@@ -14,19 +14,18 @@ are `.astro` files, posts are Markdown, and Cloudflare Pages builds and publishe
 3. **Small urgent fix?** You can commit straight to `main`; it goes live in about a minute with
    no preview. Afterwards merge `main` into `dev` (PR `main` → `dev`) so `dev` doesn't fall behind.
 
-Everything in this repo is Kennen's to change: pages, styles, posts, the CMS config in
-`public/admin/`, dependencies, and workflows. A failed Cloudflare build leaves the previous live
+Everything in this repo is Kennen's to change: pages, styles, dependencies, and
+workflows. A failed Cloudflare build leaves the previous live
 version up, so a broken change doesn't take the site down. Check the dev site and the **check**
 run on GitHub to catch problems. Only force-push and deleting `main` or `dev` are blocked, to
 protect history.
 
-Tom manages the hosting outside the repo: the two Cloudflare Pages projects (build settings and
-the `PUBLIC_SITE_ENV` variable), the `mvs-cms-auth` Worker and its GitHub OAuth App, and DNS.
-Ask him if one of those needs to change.
+Tom manages the hosting outside the repo: the two Cloudflare Pages projects (build settings)
+and DNS. Ask him if one of those needs to change.
 
 | Branch | Site | Who sees it |
 |---|---|---|
-| `dev` | https://dev.missionvisionstrategy.com | Preview, hidden from search engines; shows drafts |
+| `dev` | https://dev.missionvisionstrategy.com | Preview, hidden from search engines |
 | `main` | https://www.missionvisionstrategy.com | The real site |
 
 ## What's where
@@ -34,12 +33,10 @@ Ask him if one of those needs to change.
 ```
 src/
   pages/            index.astro (home), services.astro, approach.astro, 404.astro
-  pages/insights/   Insights list + post pages (generated from the posts; don't edit per post)
-  layouts/          Base.astro (every page: head, header, contact band, footer), Post.astro
+  layouts/          Base.astro (every page: head, header, contact band, footer)
   components/       Header.astro (nav), Footer.astro, ContactBand.astro
-  lib/              nav.ts (which nav link is "current"), insights.ts (which posts are visible)
-  content/insights/ one folder per post: <slug>/index.md, with its images beside it
-  styles/           global.css (all site styling), prose.css (Insights)
+  lib/              nav.ts (which nav link is "current")
+  styles/           global.css (all site styling)
 public/images/      star.svg, skyline.svg, other site images
 ```
 
@@ -63,39 +60,12 @@ public/images/      star.svg, skyline.svg, other site images
   `.section-head`, `.eyebrow`, `.cards`/`.card`, `.stats`, `.split`, `.work-list`, `.quote`,
   `.service`, `.steps`, `.contact`, `.button`, `.button-ghost`.
 
-## Insights posts
-
-- The easiest way is the admin at https://www.missionvisionstrategy.com/admin/ (sign in with
-  GitHub). It saves to `dev`. New posts start as a Draft.
-- By hand / with Claude: create `src/content/insights/<slug>/index.md`, where `<slug>` is
-  lowercase-with-dashes (plain ASCII) and becomes the URL `/insights/<slug>/`. Front matter:
-
-```yaml
----
-title: "Post title"
-description: "One or two sentences for the list and search results."
-pubDate: 2026-11-12
-updatedDate: 2026-12-01      # optional
-heroImage: ./hero.jpg        # optional, file sits next to index.md
-heroAlt: "What the image shows"   # required when heroImage is set
-draft: true                  # true = dev site only; set false to publish
----
-```
-
-- Styled in posts: `##`/`###` headings, paragraphs, bold/italic, links, bulleted and numbered
-  lists, `>` blockquotes, images (`![description](./photo.jpg)`), tables, `---` divider.
-  No HTML or components inside posts.
-- Images: ≤ ~500 KB, `.jpg`/`.webp` for photos, always meaningful alt text. Astro resizes them.
-  Images uploaded in the admin editor are saved in the post's own folder.
-- The Insights nav link and pages appear automatically once at least one post has `draft: false`.
-- `src/content/insights/sample-post/` is a draft showing every element; leave it or delete it.
-
 ## Checking your work locally (optional)
 
 Needs Node 22.23.4 or newer (see `.nvmrc`).
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321, shows drafts
-npm test && npm run build
+npm run dev          # http://localhost:4321
+npm run build
 ```

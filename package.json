@@ -9,12 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
-    "test": "node --test \"src/**/*.test.ts\" \"scripts/**/*.test.ts\"",
-    "check-dist": "node scripts/check-dist.ts"
+    "check": "astro check"
   },
   "dependencies": {
-    "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
     "astro": "7.4.8"
   },

@@ -1,1 +1,1 @@
-export type Current = 'home' | 'services' | 'approach' | 'insights'
+export type Current = 'home' | 'services' | 'approach'
