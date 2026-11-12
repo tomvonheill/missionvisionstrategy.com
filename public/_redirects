@@ -1,0 +1,4 @@
+# Old plain-HTML URLs → Astro directory URLs (Cloudflare Pages).
+/index.html     /            301
+/services.html  /services/   301
+/approach.html  /approach/   301

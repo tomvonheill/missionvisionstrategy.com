@@ -1,0 +1,13 @@
+---
+interface Props { heading: string; text: string }
+const { heading, text } = Astro.props
+const email = 'kennen@missionvisionstrategy.com'
+---
+<section class="contact" id="contact">
+  <div class="wrap">
+    <h2>{heading}</h2>
+    <p>{text}</p>
+    <a class="button" href={`mailto:${email}`}>Email us</a>
+    <span class="email">{email}</span>
+  </div>
+</section>

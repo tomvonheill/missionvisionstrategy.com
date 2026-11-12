@@ -27,6 +27,10 @@ class CheckLinks(unittest.TestCase):
         })
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
+    def test_directory_link_with_fragment_resolves(self):
+        r = run({"index.html": '<a href="/sub/#x">a</a><a href="/#top">b</a>', "sub/index.html": ""})
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
     def test_external_and_special_links_ignored(self):
         r = run({"index.html": '<a href="https://example.com/x">x</a><a href="mailto:a@b.c">m</a>'
                                '<a href="tel:123">t</a><a href="#top">t</a><a href="//cdn.x/y.js">y</a>'})
