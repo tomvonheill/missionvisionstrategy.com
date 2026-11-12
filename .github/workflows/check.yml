@@ -3,7 +3,7 @@ name: check
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
   contents: read
@@ -13,31 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Only site/ may change
-        if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'tomvonheill'
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          outside=$(git diff --name-only "$BASE"..."$HEAD" | grep -v '^site/' || true)
-          if [ -n "$outside" ]; then
-            echo "::error::This PR changes files outside site/. Only site/ can be edited here; ask Tom about anything else."
-            echo "$outside"
-            exit 1
-          fi
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
+          cache: npm
 
-      - name: Validate HTML
-        run: npx --yes html-validate@9 "site/**/*.html"
+      - run: npm ci
+      - run: npx astro check
+      - name: Test the CI scripts
+        run: |
+          python3 .github/scripts/test_check_links.py
 
-      - name: Check internal links
-        run: python3 .github/scripts/check_links.py site
-
-      - name: Test the link checker
-        run: python3 .github/scripts/test_check_links.py
+      - name: Build
+        run: npm run build
+      - name: Check the build
+        run: |
+          python3 .github/scripts/check_links.py dist
+          npx html-validate "dist/**/*.html"

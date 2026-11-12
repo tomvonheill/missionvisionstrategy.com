@@ -32,7 +32,7 @@ def broken_refs(root):
                 continue
             path = urllib.parse.unquote(urllib.parse.urlsplit(ref).path)
             target = (root / path.lstrip("/")) if path.startswith("/") else (page.parent / path)
-            if ref.endswith("/") or path in ("", ".", "./"):
+            if path.endswith("/") or path in ("", ".", "./"):
                 target = target / "index.html"
             target = target.resolve()
             if not target.is_relative_to(root) or not target.is_file():
