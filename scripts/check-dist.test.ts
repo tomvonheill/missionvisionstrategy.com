@@ -34,3 +34,15 @@ describe('problems(dist, "posts")', () => {
     assert.deepEqual(problems(ok, 'posts'), [])
   })
 })
+
+describe('draft tags', () => {
+  const draft = '<span class="draft-tag">Draft</span>'
+  it('flags a draft tag in either mode', () => {
+    assert.equal(problems(site({ 'index.html': draft }), 'none').length, 1)
+    const posts = site({
+      'index.html': '<a href="/insights/">Insights</a>' + draft,
+      'insights/index.html': '', 'insights/a/index.html': '', 'insights/rss.xml': '',
+    })
+    assert.equal(problems(posts, 'posts').length, 1)
+  })
+})

@@ -64,9 +64,12 @@ Every change goes to the **dev** site first, then you publish it.
   or delete on `main` or `dev`. Publish with merge commits only.
 - `check` (`.github/workflows/check.yml`) runs on PRs and pushes to `main`/`dev`: an
   infrastructure-path guard, `astro check`, unit tests, dev and live builds, HTML validation,
-  internal link check, and an Insights presence/absence check. The guard judges each commit by
-  its author: commits by Tom (his GitHub noreply identity) may change infrastructure paths;
-  anyone else's commits (including edits made inside merge commits) that touch them fail `check`.
+  internal link check, and an Insights presence/absence check. The guard judges the net change
+  (everything on `dev` not yet on `main`, or the PR's changes): an infrastructure path in that diff
+  fails `check` unless the most recent commit touching it (including edits made inside merge
+  commits) is by Tom, using his GitHub noreply identity. Reverting a bad change clears the guard.
+  It is a guardrail (author identities are self-declared), not a security boundary: CODEOWNERS,
+  the ruleset and Tom's review are the backstop.
 - `publish-pr` (`.github/workflows/publish-pr.yml`) keeps the "Publish to the live site" PR open
   and its description current.
 - `.github/CODEOWNERS` gives Tom the infrastructure paths. The repo holds no secrets.

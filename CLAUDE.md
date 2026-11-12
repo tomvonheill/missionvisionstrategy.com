@@ -11,7 +11,7 @@ are `.astro` files, posts are Markdown, and Cloudflare Pages builds and publishe
    opened automatically after every push to `dev`. Wait for **check** to be green, then merge
    with "Create a merge commit" (not squash, not rebase).
 3. **Don't change infrastructure:** `.github/`, `package.json`, `package-lock.json`,
-   `astro.config.mjs`, `tsconfig.json`, `.nvmrc`, `public/admin/`. The **check** fails if you do.
+   `astro.config.mjs`, `tsconfig.json`, `.nvmrc`, `public/admin/`, `scripts/`. The **check** fails if you do.
    Ask Tom instead.
 
 | Branch | Site | Who sees it |

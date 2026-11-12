@@ -13,6 +13,7 @@ function htmlFiles(dir: string): string[] {
 export function problems(dist: string, expect: 'none' | 'posts'): string[] {
   const out: string[] = []
   const ins = join(dist, 'insights')
+  for (const f of htmlFiles(dist)) if (readFileSync(f, 'utf8').includes('class="draft-tag"')) out.push(`${f} contains a draft tag`)
   const linking = htmlFiles(dist).filter((f) => readFileSync(f, 'utf8').includes('href="/insights/"'))
   if (expect === 'none') {
     if (existsSync(ins)) out.push('dist/insights/ exists but there are no visible posts')

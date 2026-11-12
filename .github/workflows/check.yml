@@ -20,12 +20,16 @@ jobs:
         env:
           EVENT: ${{ github.event_name }}
           BEFORE: ${{ github.event.before }}
+          REF: ${{ github.ref }}
           SHA: ${{ github.sha }}
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           if [ "$EVENT" = "pull_request" ]; then
             RANGE="$PR_BASE..$PR_HEAD"
+          elif [ "$REF" = "refs/heads/dev" ]; then
+            # everything on dev that is not yet on main (fetch-depth 0 fetched origin/main)
+            RANGE="origin/main..$SHA"
           else
             if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then exit 0; fi
             RANGE="$BEFORE..$SHA"
@@ -51,14 +55,14 @@ jobs:
       - name: Check the dev build
         run: |
           python3 .github/scripts/check_links.py dist
-          npx --yes html-validate@9 "dist/**/*.html"
+          npx html-validate "dist/**/*.html"
 
       - name: Build as the live site
         run: npm run build
       - name: Check the live build
         run: |
           python3 .github/scripts/check_links.py dist
-          npx --yes html-validate@9 "dist/**/*.html"
+          npx html-validate "dist/**/*.html"
           if find src/content/insights -mindepth 2 -maxdepth 2 -name index.md -exec grep -L '^draft: true' {} + | grep -q .; then
             node scripts/check-dist.ts dist posts
           else
