@@ -1,0 +1,51 @@
+# Sveltia CMS for Insights. Saves commit to `dev` → dev.missionvisionstrategy.com.
+# Publishing = merging the "Publish to the live site" PR. Fields mirror src/content.config.ts.
+backend:
+  name: github
+  repo: tomvonheill/missionvisionstrategy.com
+  branch: dev
+  base_url: https://mvs-cms-auth.tvh92.workers.dev
+  commit_messages:
+    create: "Insights: add “{{slug}}”"
+    update: "Insights: update “{{slug}}”"
+    delete: "Insights: delete “{{slug}}”"
+    uploadMedia: "Insights: upload {{path}}"
+    deleteMedia: "Insights: delete {{path}}"
+
+site_url: https://dev.missionvisionstrategy.com
+display_url: https://www.missionvisionstrategy.com
+logo:
+  src: /images/star.svg
+media_folder: public/images/uploads
+public_folder: /images/uploads
+# Leave empty optional fields out of the front matter (Zod .optional() rejects "" / null).
+output:
+  omit_empty_optional_fields: true
+
+collections:
+  - name: insights
+    label: Insights
+    label_singular: Post
+    folder: src/content/insights
+    path: "{{slug}}/index"
+    extension: md
+    format: frontmatter
+    create: true
+    media_folder: ""
+    public_folder: ""
+    preview_path: /insights/{{slug}}/
+    sortable_fields:
+      fields: [pubDate, title]
+      default:
+        field: pubDate
+        direction: descending
+    summary: "{{title}} — {{pubDate | date('MMM D, YYYY')}}{{draft | ternary(' (draft)', '')}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: description, label: Summary, widget: text, hint: "One or two sentences. Shown on the Insights list and in search results." }
+      - { name: pubDate, label: Publish date, widget: datetime, type: date }
+      - { name: updatedDate, label: Updated date, widget: datetime, type: date, required: false }
+      - { name: heroImage, label: Hero image, widget: image, required: false }
+      - { name: heroAlt, label: Hero image description, widget: string, required: false, hint: "Required if you add a hero image: describe it for people who can't see it." }
+      - { name: draft, label: Draft (dev site only), widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
