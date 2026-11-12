@@ -13,8 +13,9 @@ interface Props {
   contactHeading: string
   contactText: string
   ogType?: 'website' | 'article'
+  noindex?: boolean
 }
-const { title, description, current, contactHeading, contactText, ogType = 'website' } = Astro.props
+const { title, description, current, contactHeading, contactText, ogType = 'website', noindex = false } = Astro.props
 const hasInsights = await hasVisiblePosts()
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
@@ -25,7 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content={description}>
-  <link rel="canonical" href={canonical}>
+  {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
   <meta property="og:type" content={ogType}>
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>

@@ -1,10 +1,10 @@
 import rss from '@astrojs/rss'
 import type { APIContext, GetStaticPaths } from 'astro'
-import { getVisiblePosts } from '../../lib/insights'
+import { getVisiblePosts, hasVisiblePosts } from '../../lib/insights'
 
 // Emitted only when there is at least one visible post.
 export const getStaticPaths = (async () =>
-  (await getVisiblePosts()).length ? [{ params: { feed: 'rss.xml' } }] : []) satisfies GetStaticPaths
+  (await hasVisiblePosts()) ? [{ params: { feed: 'rss.xml' } }] : []) satisfies GetStaticPaths
 
 export async function GET(context: APIContext) {
   const posts = await getVisiblePosts()
