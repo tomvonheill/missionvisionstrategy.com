@@ -3,7 +3,7 @@ name: check
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
   contents: read
@@ -16,28 +16,51 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Only site/ may change
-        if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'tomvonheill'
+      - name: Infrastructure files are Tom's
         env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          outside=$(git diff --name-only "$BASE"..."$HEAD" | grep -v '^site/' || true)
-          if [ -n "$outside" ]; then
-            echo "::error::This PR changes files outside site/. Only site/ can be edited here; ask Tom about anything else."
-            echo "$outside"
-            exit 1
+          if [ "$EVENT" = "pull_request" ]; then
+            RANGE="$PR_BASE..$PR_HEAD"
+          else
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then exit 0; fi
+            RANGE="$BEFORE..$SHA"
           fi
+          python3 .github/scripts/guard_paths.py "$RANGE"
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
+          cache: npm
 
-      - name: Validate HTML
-        run: npx --yes html-validate@9 "site/**/*.html"
+      - run: npm ci
+      - run: npx astro check
+      - name: Unit tests
+        run: npm test
+      - name: Test the CI scripts
+        run: |
+          python3 .github/scripts/test_check_links.py
+          python3 .github/scripts/test_guard_paths.py
 
-      - name: Check internal links
-        run: python3 .github/scripts/check_links.py site
+      - name: Build as the dev site (drafts included)
+        run: PUBLIC_SITE_ENV=dev npm run build
+      - name: Check the dev build
+        run: |
+          python3 .github/scripts/check_links.py dist
+          npx --yes html-validate@9 "dist/**/*.html"
 
-      - name: Test the link checker
-        run: python3 .github/scripts/test_check_links.py
+      - name: Build as the live site
+        run: npm run build
+      - name: Check the live build
+        run: |
+          python3 .github/scripts/check_links.py dist
+          npx --yes html-validate@9 "dist/**/*.html"
+          if find src/content/insights -name index.md -exec grep -L '^draft: true' {} + | grep -q .; then
+            node scripts/check-dist.ts dist posts
+          else
+            node scripts/check-dist.ts dist none
+          fi

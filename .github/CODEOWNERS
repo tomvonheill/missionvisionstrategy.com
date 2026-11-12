@@ -1,6 +1,9 @@
-# Everything outside site/ is infrastructure and needs Tom's review.
-*        @tomvonheill
-
-# site/ has no code owner on purpose: content PRs can be merged by their
-# author once the `check` workflow passes.
-/site/
+# Infrastructure needs Tom's review. Everything else (pages, styles, posts, images, docs)
+# has no code owner on purpose, so content changes can be published once `check` passes.
+/.github/           @tomvonheill
+/public/admin/      @tomvonheill
+/package.json       @tomvonheill
+/package-lock.json  @tomvonheill
+/astro.config.mjs   @tomvonheill
+/tsconfig.json      @tomvonheill
+/.nvmrc             @tomvonheill
