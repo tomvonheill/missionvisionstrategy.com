@@ -2,6 +2,7 @@
 import ContactBand from '../components/ContactBand.astro'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
+import { getVisiblePosts } from '../lib/insights'
 import type { Current } from '../lib/nav.ts'
 import '../styles/global.css'
 
@@ -14,6 +15,7 @@ interface Props {
   ogType?: 'website' | 'article'
 }
 const { title, description, current, contactHeading, contactText, ogType = 'website' } = Astro.props
+const hasInsights = (await getVisiblePosts()).length > 0
 const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 <!DOCTYPE html>
@@ -33,6 +35,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site)
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap">
+  {hasInsights && <link rel="alternate" type="application/rss+xml" title="Mission Vision Strategy — Insights" href="/insights/rss.xml">}
   <slot name="head" />
 </head>
 <body>

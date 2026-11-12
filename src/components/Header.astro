@@ -1,7 +1,9 @@
 ---
+import { getVisiblePosts } from '../lib/insights'
 import type { Current } from '../lib/nav.ts'
 interface Props { current?: Current }
 const { current } = Astro.props
+const hasInsights = (await getVisiblePosts()).length > 0
 const here = (page: Current) => (current === page ? 'page' : undefined)
 ---
 <header class="site-header">
@@ -11,6 +13,7 @@ const here = (page: Current) => (current === page ? 'page' : undefined)
       <ul>
         <li><a href="/services/" aria-current={here('services')}>Services</a></li>
         <li><a href="/approach/" aria-current={here('approach')}>Approach</a></li>
+        {hasInsights && <li><a href="/insights/" aria-current={here('insights')}>Insights</a></li>}
         <li><a href="/#about">About</a></li>
         <li><a class="button" href="/#contact">Get in touch</a></li>
       </ul>
