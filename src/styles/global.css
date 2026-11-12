@@ -216,7 +216,7 @@ p {
   right: 0;
   bottom: 0;
   height: 9rem;
-  background: url("images/skyline.svg") repeat-x left bottom / auto 100%;
+  background: url("/images/skyline.svg") repeat-x left bottom / auto 100%;
 }
 
 .hero .wrap {

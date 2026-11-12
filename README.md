@@ -1,36 +1,65 @@
 # missionvisionstrategy.com
 
-Static site for [Mission Vision Strategy](https://www.missionvisionstrategy.com). Plain HTML/CSS
-in `site/`, published by Cloudflare Pages. Content editing guide: [CLAUDE.md](CLAUDE.md).
+Astro site for [Mission Vision Strategy](https://www.missionvisionstrategy.com), published by
+Cloudflare Pages. Detailed editing guide (also read by Claude): [CLAUDE.md](CLAUDE.md).
+
+## Making edits
+
+The recommended flow: changes go to the **dev** site first, then you publish them. Everything in
+this repo is yours to change: pages, styles, dependencies, and workflows.
+
+### Change a page, the layout, or the design (with Claude)
+1. In Claude (with the GitHub connector on this repository), describe the change, e.g.
+   "On the Services page, add a fifth service called …". Say **"work on the dev branch"**.
+2. Claude commits to `dev`; about a minute later check https://dev.missionvisionstrategy.com.
+3. Ask Claude for adjustments until it looks right.
+4. Publish (below).
+
+### Edit files yourself (optional)
+1. `git checkout dev && git pull`, edit, then `npm install && npm run dev` to preview locally
+   (Node 22.23.4 or newer, see `.nvmrc`).
+2. `git commit` and `git push origin dev` → the dev site updates.
+3. Publish (below).
+
+### Publish to the live site
+1. On GitHub, open **Pull requests → "Publish to the live site"** (it's created automatically
+   whenever `dev` has something new).
+2. Check the list of changes and wait for **check** to turn green. If it's red, open it to see
+   why (or ask Claude to fix it on `dev`; the PR updates itself).
+3. Click **Merge pull request** → **Create a merge commit** (not squash or rebase) → confirm.
+   The live site updates in about a minute. Leave the `dev` branch in place.
+
+### Small urgent fix
+You can commit straight to `main`; it goes live in about a minute with no preview. Afterwards
+merge `main` into `dev` (PR `main` → `dev`) so `dev` doesn't fall behind.
 
 ## How it's hosted
 
-Two **Cloudflare Pages** projects build this same repo, both with no build command and output
-directory `site`. Build settings live in the Cloudflare dashboard, not in this repo.
+Tom manages the hosting outside the repo: the two Cloudflare Pages projects and their build
+settings, and DNS.
 
-| Project | Production branch | Custom domain | Notes |
+| Pages project | Branch | Domain | Build |
 |---|---|---|---|
-| `missionvisionstrategy-com` | `main` | www.missionvisionstrategy.com | Also builds a preview for every PR/branch and comments the link |
-| `missionvisionstrategy-dev` | `dev` | dev.missionvisionstrategy.com | Previews and PR comments off; exists only to put `dev` on a custom domain |
+| `missionvisionstrategy-com` | `main` | www.missionvisionstrategy.com | `npm run build` → `dist` |
+| `missionvisionstrategy-dev` | `dev` | dev.missionvisionstrategy.com | `npm run build` → `dist` |
 
-Two projects because Pages attaches custom domains to a project's production branch; with DNS
-outside Cloudflare, a branch can't get its own custom domain any other way.
-`site/_headers` sends `X-Robots-Tag: noindex` on the dev domain.
+- Node version from `.nvmrc`. Build settings live in Cloudflare, not this repo.
+- **DNS stays at GoDaddy** (Kennen's account): `www` → `missionvisionstrategy-com.pages.dev`,
+  `dev` → `missionvisionstrategy-dev.pages.dev`, bare domain forwards (301) to www. Email records
+  (Google Workspace MX, verification TXT, DMARC) are left alone.
+- `public/_headers` sends `X-Robots-Tag: noindex` on the dev domain; `public/_redirects` maps
+  the old `.html` URLs.
+- The repo setting **Settings → Actions → General → "Allow GitHub Actions to create and approve
+  pull requests"** must be on, or the Publish PR workflow can't open the pull request.
 
-**DNS stays at GoDaddy** (Kennen's account): `www` → `missionvisionstrategy-com.pages.dev`, `dev` →
-`missionvisionstrategy-dev.pages.dev`, and the bare domain uses GoDaddy domain forwarding (301) to
-`https://www.missionvisionstrategy.com`. The email records (Google Workspace MX,
-site-verification TXT, DMARC) are deliberately left alone.
+## Checks and safety net
 
-## Guardrails
-
-- `main` and `dev` both accept direct pushes from collaborators, but neither can be force-pushed or
-  deleted. The repo allows merge commits only, so `dev` and `main` don't drift apart.
-- The `check` workflow (`.github/workflows/check.yml`) runs on every push to `main` and on every PR.
-  On PRs it fails any change by someone other than `tomvonheill` that touches files outside
-  `site/`. It validates HTML with `html-validate` and checks internal links with
-  `.github/scripts/check_links.py`. On direct pushes it reports but can't block; a required check
-  would block direct pushes entirely.
-- `.github/CODEOWNERS` gives Tom everything except `site/`. It only takes effect on PRs, since direct
-  pushes skip review.
-- Cloudflare Pages only publishes `site/`, and the repo holds no secrets.
+- `check` (`.github/workflows/check.yml`) runs on PRs and pushes to `main`/`dev`: `astro check`,
+  the build, HTML validation, and the internal link check. It is a helpful build check, not a gate.
+- A failed Cloudflare build leaves the previous live version up, so a broken change doesn't take
+  the site down. Check the dev site and the `check` run.
+- `main` and `dev` can't be force-pushed or deleted (protects history). Direct pushes to `main`
+  are allowed. Publish with merge commits.
+- `publish-pr` (`.github/workflows/publish-pr.yml`) keeps the "Publish to the live site" PR open
+  and its description current.
+- The repo holds no secrets.

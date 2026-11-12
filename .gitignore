@@ -2,3 +2,10 @@
 docs/
 idea.md
 docker-compose.yml
+
+# Build output and dependencies
+node_modules/
+dist/
+.astro/
+__pycache__/
+.env*

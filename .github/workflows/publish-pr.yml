@@ -1,0 +1,48 @@
+name: publish-pr
+
+# Keeps one open PR dev → main titled "Publish to the live site".
+# Note: PRs opened with GITHUB_TOKEN don't trigger other workflows; `check` already ran on the
+# push to dev for the same head commit, and that status is what the main ruleset requires.
+on:
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: publish-pr
+  cancel-in-progress: true
+
+jobs:
+  publish-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Open or update the Publish PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ahead=$(git rev-list --count origin/main..origin/dev)
+          if [ "$ahead" = "0" ]; then echo "dev has nothing new for main"; exit 0; fi
+          {
+            echo "Merging this pull request publishes these changes to https://www.missionvisionstrategy.com."
+            echo
+            echo "Preview them first on https://dev.missionvisionstrategy.com. Wait for **check** to be green, then use **Merge pull request** (merge commit)."
+            echo
+            echo "### Changes since the live site"
+            git log --no-merges --format='- %s (%an)' origin/main..origin/dev
+            echo
+            echo "### Files"
+            git diff --name-only origin/main...origin/dev | awk '{print "- `" $0 "`"}'
+          } > body.md
+          pr=$(gh pr list --base main --head dev --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body-file body.md
+          else
+            gh pr create --base main --head dev --title "Publish to the live site" --body-file body.md
+          fi
